@@ -11,6 +11,7 @@ import {
   BiChevronDown,
   BiClipboard,
   BiGithub,
+  BiGlobe2,
   BiHeartFill,
   BiList,
   BiMoon,
@@ -262,7 +263,7 @@ function ThemeApp({
           {showNavigation ? (
             <button
               type='button'
-              className='btn btn-outline-secondary d-md-none'
+              className='btn btn-outline vited-bs-mobile-only'
               aria-label={mobileOpened ? t('closeNavigation') : t('openNavigation')}
               aria-expanded={mobileOpened}
               onClick={() => setMobileOpened((opened) => !opened)}
@@ -276,16 +277,14 @@ function ThemeApp({
           <div className='vited-bs-header-title'>
             <div className='fw-bold text-truncate'>{title || 'Documentation'}</div>
             {description ? (
-              <div className='text-body-secondary small text-truncate d-none d-sm-block'>
-                {description}
-              </div>
+              <div className='fg-3 small text-truncate vited-bs-sm-up'>{description}</div>
             ) : undefined}
           </div>
           <div className='ms-auto d-flex align-items-center gap-2 flex-nowrap'>
             {searchIndex.length > 0 ? (
               <button
                 type='button'
-                className='btn btn-outline-secondary btn-sm vited-bs-search-button d-flex align-items-center justify-content-between gap-2'
+                className='btn btn-outline btn-sm vited-bs-search-button d-flex align-items-center justify-content-between gap-2'
                 aria-label={`${t('search')} ${getSearchShortcut()}`}
                 onClick={() => setSearchOpened(true)}
               >
@@ -301,7 +300,7 @@ function ThemeApp({
                 href={projectLinks.github}
                 target='_blank'
                 rel='noreferrer'
-                className='btn btn-outline-secondary'
+                className='btn btn-outline'
                 aria-label={t('github')}
                 title={t('github')}
               >
@@ -313,7 +312,7 @@ function ThemeApp({
                 href={projectLinks.funding}
                 target='_blank'
                 rel='noreferrer'
-                className='btn btn-outline-secondary'
+                className='btn btn-outline'
                 aria-label={t('donate')}
                 title={t('donate')}
               >
@@ -321,22 +320,11 @@ function ThemeApp({
               </a>
             ) : undefined}
             {locales.length > 1 ? (
-              <select
-                className='form-select form-select-sm vited-bs-locale-select'
-                aria-label={t('language')}
-                value={locale}
-                onChange={(event) => changeLocale(event.target.value)}
-              >
-                {locales.map((item) => (
-                  <option key={item} value={item}>
-                    {new Intl.DisplayNames([item], { type: 'language' }).of(item) ?? item}
-                  </option>
-                ))}
-              </select>
+              <LocaleSelect locale={locale} locales={locales} onChange={changeLocale} />
             ) : undefined}
             <button
               type='button'
-              className='btn btn-outline-secondary'
+              className='btn btn-outline'
               aria-label={colorScheme === 'dark' ? t('switchToLight') : t('switchToDark')}
               title={colorScheme === 'dark' ? t('switchToLight') : t('switchToDark')}
               onClick={toggleColorScheme}
@@ -348,9 +336,9 @@ function ThemeApp({
       </header>
       <div className='d-flex flex-grow-1 align-items-stretch'>
         {showNavigation ? (
-          <aside className='d-none d-md-block border-end vited-bs-sidebar'>
+          <aside className='vited-bs-desktop-only border-end vited-bs-sidebar'>
             <div className='vited-bs-sidebar-inner p-3'>
-              <div className='small fw-semibold text-body-secondary mb-2'>{t('navigation')}</div>
+              <div className='small fw-semibold fg-3 mb-2'>{t('navigation')}</div>
               <nav aria-label={t('navigation')}>
                 <ul className='nav flex-column vited-bs-nav gap-1'>{navigation}</ul>
               </nav>
@@ -358,17 +346,17 @@ function ThemeApp({
           </aside>
         ) : undefined}
         <main className='flex-grow-1 vited-bs-main'>
-          <div className='container-lg px-3 py-3 vited-bs-content'>
+          <div className='vited-bs-container py-3 vited-bs-content'>
             {Content ? (
               <Content components={markdownComponents} />
             ) : (
-              <p className='text-body-secondary'>{t('noDocuments')}</p>
+              <p className='fg-3'>{t('noDocuments')}</p>
             )}
           </div>
         </main>
       </div>
       {showNavigation && mobileOpened ? (
-        <div className='d-md-none'>
+        <div className='vited-bs-mobile-only'>
           <button
             type='button'
             className='vited-bs-offcanvas-backdrop'
@@ -377,7 +365,7 @@ function ThemeApp({
           />
           <aside className='vited-bs-offcanvas-panel bg-body border-end p-3'>
             <div className='d-flex align-items-center justify-content-between mb-2'>
-              <span className='small fw-semibold text-body-secondary'>{t('navigation')}</span>
+              <span className='small fw-semibold fg-3'>{t('navigation')}</span>
               <button
                 type='button'
                 className='btn-close'
@@ -417,6 +405,72 @@ export function VitedTheme(props: VitedThemeProps): ReactElement {
 
 export default VitedTheme;
 
+interface LocaleSelectProps {
+  locale: string;
+  locales: string[];
+  onChange: (locale: string) => void;
+}
+
+/** Bootstrap-themed locale picker; Bootstrap 6 has no styled select component. */
+function LocaleSelect({ locale, locales, onChange }: LocaleSelectProps): ReactElement {
+  const { t } = useTranslation();
+  const [opened, setOpened] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!opened) return;
+    function onPointerDown(event: PointerEvent) {
+      if (!rootRef.current?.contains(event.target as Node)) setOpened(false);
+    }
+    function onKeyDown(event: globalThis.KeyboardEvent) {
+      if (event.key === 'Escape') setOpened(false);
+    }
+    globalThis.document.addEventListener('pointerdown', onPointerDown);
+    globalThis.document.addEventListener('keydown', onKeyDown);
+    return () => {
+      globalThis.document.removeEventListener('pointerdown', onPointerDown);
+      globalThis.document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [opened]);
+
+  return (
+    <div ref={rootRef} className='vited-bs-locale'>
+      <button
+        type='button'
+        className='btn btn-outline d-flex align-items-center gap-2'
+        aria-label={t('language')}
+        aria-expanded={opened}
+        aria-haspopup='menu'
+        onClick={() => setOpened((value) => !value)}
+      >
+        <BiGlobe2 size={16} />
+        {new Intl.DisplayNames([locale], { type: 'language' }).of(locale) ?? locale}
+        <BiChevronDown size={14} />
+      </button>
+      {opened ? (
+        <div className='vited-bs-locale-menu' role='menu'>
+          {locales.map((item) => (
+            <button
+              key={item}
+              type='button'
+              className='vited-bs-locale-item'
+              role='menuitemradio'
+              aria-checked={item === locale}
+              onClick={() => {
+                onChange(item);
+                setOpened(false);
+              }}
+            >
+              {new Intl.DisplayNames([item], { type: 'language' }).of(item) ?? item}
+              <BiCheck size={16} className='vited-bs-locale-check ms-auto' aria-hidden='true' />
+            </button>
+          ))}
+        </div>
+      ) : undefined}
+    </div>
+  );
+}
+
 interface SearchModalProps {
   search: (query: string) => SearchDocument[];
   onNavigate: (pathname: string) => void;
@@ -432,8 +486,8 @@ function SearchModal({ search, onNavigate, onClose }: SearchModalProps): ReactEl
 
   useEffect(() => {
     inputRef.current?.focus();
-    globalThis.document.body.classList.add('modal-open');
-    return () => globalThis.document.body.classList.remove('modal-open');
+    globalThis.document.documentElement.classList.add('dialog-open');
+    return () => globalThis.document.documentElement.classList.remove('dialog-open');
   }, []);
 
   function select(item: SearchDocument) {
@@ -464,59 +518,60 @@ function SearchModal({ search, onNavigate, onClose }: SearchModalProps): ReactEl
         aria-label={t('close')}
         onClick={onClose}
       />
-      <dialog open className='vited-bs-modal' aria-modal='true' aria-label={t('search')}>
-        <div className='modal-content vited-bs-modal-dialog'>
-          <div className='modal-header d-flex align-items-center gap-2'>
-            <BiSearch size={16} className='text-body-secondary flex-shrink-0' />
-            <input
-              ref={inputRef}
-              type='search'
-              className='form-control border-0 shadow-none'
-              placeholder={t('searchPlaceholder')}
-              aria-label={t('search')}
-              value={query}
-              onChange={(event) => {
-                setQuery(event.target.value);
-                setActiveIndex(0);
-              }}
-              onKeyDown={onKeyDown}
-            />
-            <button
-              type='button'
-              className='btn-close flex-shrink-0'
-              aria-label={t('close')}
-              onClick={onClose}
-            />
-          </div>
-          <div className='vited-bs-search-results border-top'>
-            {results.length > 0 ? (
-              <div className='list-group list-group-flush'>
-                {results.map((item, index) => (
-                  <button
-                    key={`${item.locale}:${item.pathname}`}
-                    type='button'
-                    className={`list-group-item list-group-item-action${index === activeIndex ? ' active' : ''}`}
-                    ref={
-                      index === activeIndex
-                        ? (element) => element?.scrollIntoView({ block: 'nearest' })
-                        : undefined
-                    }
-                    onMouseEnter={() => setActiveIndex(index)}
-                    onClick={() => select(item)}
-                  >
-                    <div className='fw-semibold'>{highlightText(item.title, query)}</div>
-                    <div
-                      className={`small text-truncate${index === activeIndex ? '' : ' text-body-secondary'}`}
-                    >
-                      {highlightText(item.content.slice(0, 140), query)}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <p className='text-body-secondary p-3 mb-0'>{t('noSearchResults')}</p>
-            )}
-          </div>
+      <dialog
+        open
+        className='dialog vited-bs-search-dialog'
+        aria-modal='true'
+        aria-label={t('search')}
+      >
+        <div className='dialog-header d-flex align-items-center gap-2'>
+          <BiSearch size={16} className='fg-3 flex-shrink-0' />
+          <input
+            ref={inputRef}
+            type='search'
+            className='form-control'
+            placeholder={t('searchPlaceholder')}
+            aria-label={t('search')}
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setActiveIndex(0);
+            }}
+            onKeyDown={onKeyDown}
+          />
+          <button
+            type='button'
+            className='btn-close flex-shrink-0'
+            aria-label={t('close')}
+            onClick={onClose}
+          />
+        </div>
+        <div className='dialog-body p-0 vited-bs-search-results'>
+          {results.length > 0 ? (
+            <div className='list-group list-group-flush'>
+              {results.map((item, index) => (
+                <button
+                  key={`${item.locale}:${item.pathname}`}
+                  type='button'
+                  className={`list-group-item list-group-item-action${index === activeIndex ? ' active' : ''}`}
+                  ref={
+                    index === activeIndex
+                      ? (element) => element?.scrollIntoView({ block: 'nearest' })
+                      : undefined
+                  }
+                  onMouseEnter={() => setActiveIndex(index)}
+                  onClick={() => select(item)}
+                >
+                  <div className='fw-semibold'>{highlightText(item.title, query)}</div>
+                  <div className={`small text-truncate${index === activeIndex ? '' : ' fg-3'}`}>
+                    {highlightText(item.content.slice(0, 140), query)}
+                  </div>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className='fg-3 p-3 mb-0'>{t('noSearchResults')}</p>
+          )}
         </div>
       </dialog>
     </>

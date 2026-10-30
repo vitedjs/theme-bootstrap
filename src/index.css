@@ -1,3 +1,36 @@
+/* Bootstrap 6 has no responsive display utilities, so visibility is handled here. */
+.vited-bs-desktop-only {
+  display: none;
+}
+
+@media (width >= 768px) {
+  .vited-bs-desktop-only {
+    display: block;
+  }
+
+  .vited-bs-mobile-only {
+    display: none;
+  }
+}
+
+.vited-bs-sm-up {
+  display: none;
+}
+
+@media (width >= 576px) {
+  .vited-bs-sm-up {
+    display: block;
+  }
+}
+
+/* Bootstrap 6 has no fixed-width container, only .container and .container-fluid. */
+.vited-bs-container {
+  width: 100%;
+  max-width: 1140px;
+  padding-inline: 1rem;
+  margin-inline: auto;
+}
+
 .vited-bs-header {
   height: 65px;
 }
@@ -9,7 +42,7 @@
 .vited-bs-search-button {
   width: 180px;
   font-weight: 400;
-  color: var(--bs-secondary-color);
+  color: var(--bs-fg-3);
 }
 
 @media (width >= 576px) {
@@ -18,8 +51,46 @@
   }
 }
 
-.vited-bs-locale-select {
-  width: 8rem;
+.vited-bs-locale {
+  position: relative;
+}
+
+.vited-bs-locale-menu {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  right: 0;
+  z-index: 1070;
+  min-width: 10rem;
+  padding: 0.25rem;
+  background-color: var(--bs-bg-body);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-radius-3);
+  box-shadow: var(--bs-box-shadow);
+}
+
+.vited-bs-locale-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  color: var(--bs-fg-1);
+  text-align: start;
+  background: none;
+  border: 0;
+  border-radius: var(--bs-radius-2);
+}
+
+.vited-bs-locale-item:hover {
+  background-color: var(--bs-bg-2);
+}
+
+.vited-bs-locale-check {
+  visibility: hidden;
+}
+
+.vited-bs-locale-item[aria-checked='true'] .vited-bs-locale-check {
+  visibility: visible;
 }
 
 .vited-bs-sidebar {
@@ -40,18 +111,18 @@
 
 .vited-bs-nav .nav-link {
   padding: 0.375rem 0.75rem;
-  color: var(--bs-emphasis-color);
-  border-radius: var(--bs-border-radius);
+  color: var(--bs-fg-1);
+  border-radius: var(--bs-radius-3);
 }
 
 .vited-bs-nav .nav-link:hover {
-  background-color: var(--bs-tertiary-bg);
+  background-color: var(--bs-bg-2);
 }
 
 .vited-bs-nav .nav-link.active {
   font-weight: 600;
-  color: var(--bs-primary-text-emphasis);
-  background-color: var(--bs-primary-bg-subtle);
+  color: var(--bs-accent-fg-emphasis);
+  background-color: var(--bs-accent-bg-subtle);
 }
 
 .vited-bs-chevron {
@@ -82,30 +153,16 @@
   overflow-y: auto;
 }
 
-.vited-bs-modal {
+/* A non-modal .dialog has no ::backdrop; position it near the top, centered. */
+.vited-bs-search-dialog {
   position: fixed;
   inset: 0;
   z-index: 1060;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: auto;
-  height: auto;
-  max-width: none;
-  max-height: none;
-  padding: 3rem 1rem;
-  margin: 0;
-  overflow-y: auto;
-  color: inherit;
-  background: transparent;
-  border: 0;
-  pointer-events: none;
-}
+  height: fit-content;
+  max-height: calc(100vh - 6rem);
+  margin-block: 3rem auto;
 
-.vited-bs-modal-dialog {
-  width: 100%;
-  max-width: 640px;
-  pointer-events: auto;
+  --bs-dialog-width: 640px;
 }
 
 .vited-bs-search-results {
@@ -154,15 +211,15 @@
   display: flex;
   align-items: center;
   padding: 0.25rem;
-  color: var(--bs-secondary-color);
-  background-color: var(--bs-body-bg);
+  color: var(--bs-fg-3);
+  background-color: var(--bs-bg-body);
   border: var(--bs-border-width) solid var(--bs-border-color);
-  border-radius: var(--bs-border-radius-sm);
+  border-radius: var(--bs-radius-2);
 }
 
 .vited-bs-copy-button:hover {
-  color: var(--bs-emphasis-color);
-  background-color: var(--bs-tertiary-bg);
+  color: var(--bs-fg-1);
+  background-color: var(--bs-bg-2);
 }
 
 .vited-bs-content img {
@@ -173,8 +230,8 @@
 .vited-bs-content :not(pre) > code {
   padding: 0.125rem 0.375rem;
   font-size: 0.875em;
-  background-color: var(--bs-tertiary-bg);
-  border-radius: var(--bs-border-radius-sm);
+  background-color: var(--bs-bg-2);
+  border-radius: var(--bs-radius-2);
 }
 
 .vited-bs-content table {

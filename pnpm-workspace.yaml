@@ -1,0 +1,3 @@
+minimumReleaseAgeExclude:
+  - oxlint-config-recommended@1.2.1
+  - bootstrap@6.0.0-alpha.1

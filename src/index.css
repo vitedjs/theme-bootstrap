@@ -45,6 +45,12 @@
   color: var(--bs-fg-3);
 }
 
+/* The default kbd uses a high-contrast inverted chip, which is too strong in the navbar. */
+.vited-bs-search-button kbd {
+  color: var(--bs-fg-3);
+  background-color: var(--bs-bg-2);
+}
+
 @media (width >= 576px) {
   .vited-bs-search-button {
     width: 250px;

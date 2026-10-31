@@ -263,7 +263,7 @@ function ThemeApp({
           {showNavigation ? (
             <button
               type='button'
-              className='btn btn-outline vited-bs-mobile-only'
+              className='btn btn-outline theme-secondary vited-bs-mobile-only'
               aria-label={mobileOpened ? t('closeNavigation') : t('openNavigation')}
               aria-expanded={mobileOpened}
               onClick={() => setMobileOpened((opened) => !opened)}
@@ -284,7 +284,7 @@ function ThemeApp({
             {searchIndex.length > 0 ? (
               <button
                 type='button'
-                className='btn btn-outline btn-sm vited-bs-search-button d-flex align-items-center justify-content-between gap-2'
+                className='btn btn-outline theme-secondary vited-bs-search-button d-flex align-items-center justify-content-between gap-2'
                 aria-label={`${t('search')} ${getSearchShortcut()}`}
                 onClick={() => setSearchOpened(true)}
               >
@@ -300,7 +300,7 @@ function ThemeApp({
                 href={projectLinks.github}
                 target='_blank'
                 rel='noreferrer'
-                className='btn btn-outline'
+                className='btn btn-outline theme-secondary'
                 aria-label={t('github')}
                 title={t('github')}
               >
@@ -312,7 +312,7 @@ function ThemeApp({
                 href={projectLinks.funding}
                 target='_blank'
                 rel='noreferrer'
-                className='btn btn-outline'
+                className='btn btn-outline theme-secondary'
                 aria-label={t('donate')}
                 title={t('donate')}
               >
@@ -324,7 +324,7 @@ function ThemeApp({
             ) : undefined}
             <button
               type='button'
-              className='btn btn-outline'
+              className='btn btn-outline theme-secondary'
               aria-label={colorScheme === 'dark' ? t('switchToLight') : t('switchToDark')}
               title={colorScheme === 'dark' ? t('switchToLight') : t('switchToDark')}
               onClick={toggleColorScheme}
@@ -437,7 +437,7 @@ function LocaleSelect({ locale, locales, onChange }: LocaleSelectProps): ReactEl
     <div ref={rootRef} className='vited-bs-locale'>
       <button
         type='button'
-        className='btn btn-outline d-flex align-items-center gap-2'
+        className='btn btn-outline theme-secondary d-flex align-items-center gap-2'
         aria-label={t('language')}
         aria-expanded={opened}
         aria-haspopup='menu'

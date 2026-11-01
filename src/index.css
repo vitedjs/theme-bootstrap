@@ -281,7 +281,7 @@
 
 .vited-bs-content-layout {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 2rem;
   max-width: 1440px;
   margin-inline: auto;

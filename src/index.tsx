@@ -368,18 +368,20 @@ function ThemeApp({
                 <p className='fg-3'>{t('noDocuments')}</p>
               )}
             </div>
-            {tocHeadings.length > 0 ? (
-              <aside className='vited-bs-toc'>
-                <div className='vited-bs-toc-inner'>
-                  <div className='small fw-semibold fg-3 mb-2'>{t('tableOfContents')}</div>
-                  <TocTree
-                    headings={tocHeadings}
-                    activeId={activeHeadingId}
-                    ariaLabel={t('tableOfContents')}
-                  />
-                </div>
-              </aside>
-            ) : undefined}
+            <aside className='vited-bs-toc' aria-hidden={tocHeadings.length > 0 ? undefined : true}>
+              <div className='vited-bs-toc-inner'>
+                {tocHeadings.length > 0 ? (
+                  <>
+                    <div className='small fw-semibold fg-3 mb-2'>{t('tableOfContents')}</div>
+                    <TocTree
+                      headings={tocHeadings}
+                      activeId={activeHeadingId}
+                      ariaLabel={t('tableOfContents')}
+                    />
+                  </>
+                ) : undefined}
+              </div>
+            </aside>
           </div>
         </main>
       </div>

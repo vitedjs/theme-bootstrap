@@ -14,6 +14,7 @@ import {
   BiGlobe2,
   BiHeartFill,
   BiList,
+  BiListUl,
   BiMoon,
   BiSearch,
   BiSun,
@@ -26,6 +27,7 @@ import { Link, Router, useLocation } from 'wouter';
 import { themeI18n } from './i18n';
 import { getProjectLinks } from './project-links';
 import { createPageSearch, type SearchDocument } from './search';
+import { collectTocHeadings, useActiveHeading, type TocHeading } from './toc';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
@@ -196,7 +198,15 @@ function ThemeApp({
   const Content = route ? pages[route.page].component : undefined;
   const { t, i18n } = useTranslation();
   const [mobileOpened, setMobileOpened] = useState(false);
+  const [tocOpened, setTocOpened] = useState(false);
   const [searchOpened, setSearchOpened] = useState(false);
+  const [tocHeadings, setTocHeadings] = useState<TocHeading[]>([]);
+  const activeHeadingId = useActiveHeading(tocHeadings);
+  // Collect the outline when a page mounts; the keyed wrapper remounts on navigation.
+  const attachContent = useCallback((element: HTMLDivElement | null) => {
+    setTocHeadings(element ? collectTocHeadings(element) : []);
+    if (element) setTocOpened(false);
+  }, []);
   const [colorScheme, toggleColorScheme] = useColorScheme();
   const projectLinks = useMemo(() => getProjectLinks(packageJSON), [packageJSON]);
   const navigationPages = useMemo(
@@ -346,12 +356,30 @@ function ThemeApp({
           </aside>
         ) : undefined}
         <main className='flex-grow-1 vited-bs-main'>
-          <div className='vited-bs-container py-3 vited-bs-content'>
-            {Content ? (
-              <Content components={markdownComponents} />
-            ) : (
-              <p className='fg-3'>{t('noDocuments')}</p>
-            )}
+          <div className='vited-bs-content-layout'>
+            <div
+              className='vited-bs-container py-3 vited-bs-content'
+              key={pathname}
+              ref={attachContent}
+            >
+              {Content ? (
+                <Content components={markdownComponents} />
+              ) : (
+                <p className='fg-3'>{t('noDocuments')}</p>
+              )}
+            </div>
+            {tocHeadings.length > 0 ? (
+              <aside className='vited-bs-toc'>
+                <div className='vited-bs-toc-inner'>
+                  <div className='small fw-semibold fg-3 mb-2'>{t('tableOfContents')}</div>
+                  <TocTree
+                    headings={tocHeadings}
+                    activeId={activeHeadingId}
+                    ariaLabel={t('tableOfContents')}
+                  />
+                </div>
+              </aside>
+            ) : undefined}
           </div>
         </main>
       </div>
@@ -379,6 +407,46 @@ function ThemeApp({
           </aside>
         </div>
       ) : undefined}
+      {tocHeadings.length > 0 ? (
+        <>
+          <button
+            type='button'
+            className='btn btn-primary rounded-circle shadow vited-bs-toc-toggle'
+            aria-label={tocOpened ? t('closeTableOfContents') : t('openTableOfContents')}
+            aria-expanded={tocOpened}
+            onClick={() => setTocOpened((opened) => !opened)}
+          >
+            {tocOpened ? <BiX size={22} /> : <BiListUl size={22} />}
+          </button>
+          {tocOpened ? (
+            <div className='vited-bs-toc-mobile'>
+              <button
+                type='button'
+                className='vited-bs-offcanvas-backdrop'
+                aria-label={t('closeTableOfContents')}
+                onClick={() => setTocOpened(false)}
+              />
+              <aside className='vited-bs-toc-panel bg-body border-start p-3'>
+                <div className='d-flex align-items-center justify-content-between mb-2'>
+                  <span className='small fw-semibold fg-3'>{t('tableOfContents')}</span>
+                  <button
+                    type='button'
+                    className='btn-close'
+                    aria-label={t('closeTableOfContents')}
+                    onClick={() => setTocOpened(false)}
+                  />
+                </div>
+                <TocTree
+                  headings={tocHeadings}
+                  activeId={activeHeadingId}
+                  ariaLabel={t('tableOfContents')}
+                  onNavigate={() => setTocOpened(false)}
+                />
+              </aside>
+            </div>
+          ) : undefined}
+        </>
+      ) : undefined}
       {searchIndex.length > 0 && searchOpened ? (
         <SearchModal
           search={search}
@@ -390,6 +458,57 @@ function ThemeApp({
         />
       ) : undefined}
     </div>
+  );
+}
+
+interface TocTreeProps {
+  headings: TocHeading[];
+  activeId?: string;
+  ariaLabel: string;
+  onNavigate?: () => void;
+  nested?: boolean;
+}
+
+function TocTree({
+  headings,
+  activeId,
+  ariaLabel,
+  onNavigate,
+  nested,
+}: TocTreeProps): ReactElement {
+  const list = (
+    <ul className={nested ? 'vited-bs-toc-sublist' : 'nav flex-column vited-bs-toc-nav'}>
+      {headings.map((heading) => (
+        <li key={heading.id} className='nav-item'>
+          <a
+            href={`#${heading.id}`}
+            className={`nav-link${heading.id === activeId ? ' active' : ''}`}
+            style={{ paddingInlineStart: 12 + (heading.level - 2) * 12 }}
+            aria-current={heading.id === activeId ? 'location' : undefined}
+            onClick={onNavigate}
+          >
+            {heading.text}
+          </a>
+          {heading.children.length > 0 ? (
+            <TocTree
+              headings={heading.children}
+              activeId={activeId}
+              ariaLabel={ariaLabel}
+              onNavigate={onNavigate}
+              nested
+            />
+          ) : undefined}
+        </li>
+      ))}
+    </ul>
+  );
+
+  return nested ? (
+    list
+  ) : (
+    <nav aria-label={ariaLabel} className='vited-bs-toc-tree'>
+      {list}
+    </nav>
   );
 }
 

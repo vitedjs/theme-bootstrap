@@ -273,7 +273,7 @@ function ThemeApp({
           {showNavigation ? (
             <button
               type='button'
-              className='btn btn-outline theme-secondary vited-bs-mobile-only'
+              className='btn btn-outline theme-secondary vited-bs-mobile-only vited-bs-icon-button'
               aria-label={mobileOpened ? t('closeNavigation') : t('openNavigation')}
               aria-expanded={mobileOpened}
               onClick={() => setMobileOpened((opened) => !opened)}
@@ -290,19 +290,23 @@ function ThemeApp({
               <div className='fg-3 small text-truncate vited-bs-sm-up'>{description}</div>
             ) : undefined}
           </div>
-          <div className='ms-auto d-flex align-items-center gap-2 flex-nowrap'>
+          <div
+            className={`ms-auto d-flex align-items-center flex-nowrap vited-bs-header-actions${
+              showNavigation ? ' vited-bs-has-navigation' : ''
+            }`}
+          >
             {searchIndex.length > 0 ? (
               <button
                 type='button'
-                className='btn btn-outline theme-secondary vited-bs-search-button d-flex align-items-center justify-content-between gap-2'
+                className='btn btn-outline theme-secondary vited-bs-search-button vited-bs-mobile-icon-button d-flex align-items-center justify-content-between gap-2'
                 aria-label={`${t('search')} ${getSearchShortcut()}`}
                 onClick={() => setSearchOpened(true)}
               >
                 <span className='d-inline-flex align-items-center gap-2'>
-                  <BiSearch size={14} />
-                  {t('search')}
+                  <BiSearch size={20} />
+                  <span className='vited-bs-search-label'>{t('search')}</span>
                 </span>
-                <kbd className='small'>{getSearchShortcut()}</kbd>
+                <kbd className='small vited-bs-search-shortcut'>{getSearchShortcut()}</kbd>
               </button>
             ) : undefined}
             {projectLinks.github ? (
@@ -310,7 +314,7 @@ function ThemeApp({
                 href={projectLinks.github}
                 target='_blank'
                 rel='noreferrer'
-                className='btn btn-outline theme-secondary'
+                className='btn btn-outline theme-secondary vited-bs-project-link vited-bs-icon-button'
                 aria-label={t('github')}
                 title={t('github')}
               >
@@ -322,11 +326,11 @@ function ThemeApp({
                 href={projectLinks.funding}
                 target='_blank'
                 rel='noreferrer'
-                className='btn btn-outline theme-secondary'
+                className='btn btn-outline theme-secondary vited-bs-project-link vited-bs-icon-button'
                 aria-label={t('donate')}
                 title={t('donate')}
               >
-                <BiHeartFill size={18} color='red' />
+                <BiHeartFill size={20} color='red' />
               </a>
             ) : undefined}
             {locales.length > 1 ? (
@@ -334,12 +338,12 @@ function ThemeApp({
             ) : undefined}
             <button
               type='button'
-              className='btn btn-outline theme-secondary'
+              className='btn btn-outline theme-secondary vited-bs-icon-button'
               aria-label={colorScheme === 'dark' ? t('switchToLight') : t('switchToDark')}
               title={colorScheme === 'dark' ? t('switchToLight') : t('switchToDark')}
               onClick={toggleColorScheme}
             >
-              {colorScheme === 'dark' ? <BiSun size={18} /> : <BiMoon size={18} />}
+              {colorScheme === 'dark' ? <BiSun size={20} /> : <BiMoon size={20} />}
             </button>
           </div>
         </div>
@@ -406,6 +410,32 @@ function ThemeApp({
             <nav aria-label={t('navigation')}>
               <ul className='nav flex-column vited-bs-nav gap-1'>{navigation}</ul>
             </nav>
+            {projectLinks.github || projectLinks.funding ? (
+              <div className='vited-bs-offcanvas-links border-top mt-3 pt-3 d-flex flex-wrap gap-2'>
+                {projectLinks.github ? (
+                  <a
+                    href={projectLinks.github}
+                    target='_blank'
+                    rel='noreferrer'
+                    className='btn btn-outline theme-secondary d-flex align-items-center gap-2'
+                  >
+                    <BiGithub size={18} />
+                    {t('github')}
+                  </a>
+                ) : undefined}
+                {projectLinks.funding ? (
+                  <a
+                    href={projectLinks.funding}
+                    target='_blank'
+                    rel='noreferrer'
+                    className='btn btn-outline theme-secondary d-flex align-items-center gap-2'
+                  >
+                    <BiHeartFill size={18} color='red' />
+                    {t('donate')}
+                  </a>
+                ) : undefined}
+              </div>
+            ) : undefined}
           </aside>
         </div>
       ) : undefined}
@@ -537,6 +567,7 @@ function LocaleSelect({ locale, locales, onChange }: LocaleSelectProps): ReactEl
   const { t } = useTranslation();
   const [opened, setOpened] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const localeLabel = new Intl.DisplayNames([locale], { type: 'language' }).of(locale) ?? locale;
 
   useEffect(() => {
     if (!opened) return;
@@ -558,15 +589,16 @@ function LocaleSelect({ locale, locales, onChange }: LocaleSelectProps): ReactEl
     <div ref={rootRef} className='vited-bs-locale'>
       <button
         type='button'
-        className='btn btn-outline theme-secondary d-flex align-items-center gap-2'
-        aria-label={t('language')}
+        className='btn btn-outline theme-secondary vited-bs-mobile-icon-button d-flex align-items-center gap-2'
+        aria-label={`${t('language')}: ${localeLabel}`}
+        title={`${t('language')}: ${localeLabel}`}
         aria-expanded={opened}
         aria-haspopup='menu'
         onClick={() => setOpened((value) => !value)}
       >
-        <BiGlobe2 size={16} />
-        {new Intl.DisplayNames([locale], { type: 'language' }).of(locale) ?? locale}
-        <BiChevronDown size={14} />
+        <BiGlobe2 size={20} />
+        <span className='vited-bs-locale-label'>{localeLabel}</span>
+        <BiChevronDown size={14} className='vited-bs-locale-caret' />
       </button>
       {opened ? (
         <div className='vited-bs-locale-menu' role='menu'>

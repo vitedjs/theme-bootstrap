@@ -39,6 +39,31 @@
   min-width: 0;
 }
 
+.vited-bs-header-actions {
+  gap: 0.5rem;
+}
+
+/* Buttons that only hold an icon keep the same square size across breakpoints. */
+.vited-bs-icon-button {
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+}
+
+.vited-bs-icon-button svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* The labelled controls match the height of the icon buttons. */
+.vited-bs-search-button,
+.vited-bs-locale > button {
+  height: 2.5rem;
+}
+
 .vited-bs-search-button {
   width: 180px;
   font-weight: 400;
@@ -51,9 +76,43 @@
   background-color: var(--bs-bg-2);
 }
 
-@media (width >= 576px) {
+@media (width >= 1024px) {
   .vited-bs-search-button {
     width: 250px;
+  }
+}
+
+/* Mobile and tablet widths only show the search icon and the language icon. */
+@media (width < 768px) {
+  /* The labelled controls collapse to square icon buttons. */
+  .vited-bs-header .vited-bs-mobile-icon-button {
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+  }
+
+  .vited-bs-header .vited-bs-mobile-icon-button svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .vited-bs-search-label,
+  .vited-bs-search-shortcut,
+  .vited-bs-locale-label,
+  .vited-bs-locale-caret {
+    display: none;
+  }
+
+  .vited-bs-header-actions {
+    gap: 0.375rem;
+  }
+
+  /* The navigation drawer carries the project links on small screens so the title keeps its room. */
+  .vited-bs-has-navigation .vited-bs-project-link {
+    display: none;
   }
 }
 

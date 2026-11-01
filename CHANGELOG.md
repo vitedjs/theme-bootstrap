@@ -10,6 +10,7 @@
 
 - On small screens, show the search and language controls as icon buttons and move the GitHub and Donate links into the navigation drawer, so the header title keeps its space. Icon-only buttons keep the same square size on every screen.
 - Use 20px icons for the header toolbar buttons.
+- Match the table of contents column width to the navigation sidebar, keeping the article centered on wide screens.
 
 ## 0.1.0
 

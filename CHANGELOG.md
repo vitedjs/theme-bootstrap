@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.1.3 - 2026-11-03
+
+### Fixed
+
+- Display nested sidebar entries below their parent instead of beside it.
+
 ## 0.1.2 - 2026-11-02
 
 ### Added

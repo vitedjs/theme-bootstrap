@@ -15,6 +15,7 @@ export function CopyButton({ code }: { code: string }) {
 
   return (
     <IconButton
+      position='absolute'
       variant={copied ? 'subtle' : 'outline'}
       theme={copied ? 'success' : 'secondary'}
       size='xs'
@@ -26,6 +27,7 @@ export function CopyButton({ code }: { code: string }) {
         }
         setCopied(true);
       }}
+      style={{ top: '0.5rem', right: '0.5rem' }}
     >
       {copied ? <BiCheck2 size={16} /> : <BiClipboard size={16} />}
     </IconButton>

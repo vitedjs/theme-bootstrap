@@ -8,8 +8,8 @@ export function CopyButton({ code }: { code: string }) {
 
   useEffect(() => {
     if (!copied) return;
-    const timer = globalThis.setTimeout(() => setCopied(false), 2000);
-    return () => globalThis.clearTimeout(timer);
+    const timer = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(timer);
   }, [copied]);
 
   return (
@@ -19,7 +19,9 @@ export function CopyButton({ code }: { code: string }) {
       aria-label={copied ? t('copied') : t('copy')}
       title={copied ? t('copied') : t('copy')}
       onClick={() => {
-        void globalThis.navigator?.clipboard?.writeText(code).catch(() => {});
+        if (typeof navigator !== 'undefined') {
+          void navigator.clipboard?.writeText(code).catch(() => {});
+        }
         setCopied(true);
       }}
     >

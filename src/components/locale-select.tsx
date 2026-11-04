@@ -21,14 +21,14 @@ export function LocaleSelect({ locale, locales, onChange }: LocaleSelectProps) {
     function onPointerDown(event: PointerEvent) {
       if (!rootRef.current?.contains(event.target as Node)) setOpened(false);
     }
-    function onKeyDown(event: globalThis.KeyboardEvent) {
+    function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') setOpened(false);
     }
-    globalThis.document.addEventListener('pointerdown', onPointerDown);
-    globalThis.document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
     return () => {
-      globalThis.document.removeEventListener('pointerdown', onPointerDown);
-      globalThis.document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
     };
   }, [opened]);
 

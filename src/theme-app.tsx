@@ -95,19 +95,19 @@ export function ThemeApp({
   );
 
   useEffect(() => {
-    globalThis.document.documentElement.lang = locale;
+    document.documentElement.lang = locale;
     void i18n.changeLanguage(locale);
   }, [i18n, locale]);
 
   useEffect(() => {
-    function onKeyDown(event: globalThis.KeyboardEvent) {
+    function onKeyDown(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
         setSearchOpened(true);
       }
     }
-    globalThis.document.addEventListener('keydown', onKeyDown);
-    return () => globalThis.document.removeEventListener('keydown', onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, []);
 
   function changeLocale(nextLocale: string) {
@@ -116,7 +116,7 @@ export function ThemeApp({
       routes.find((item) => item.path === route?.path && item.locale === nextLocale) ??
       routes.find((item) => item.locale === nextLocale);
     if (!nextRoute) return;
-    const url = new globalThis.URL(globalThis.location.href);
+    const url = new URL(location.href);
     url.searchParams.delete('lang');
     navigate(`${nextRoute.pathname}${url.search}${url.hash}`);
   }
@@ -354,8 +354,7 @@ export function ThemeApp({
 }
 
 function getSearchShortcut(): string {
-  return globalThis.navigator !== undefined &&
-    /Mac|iPhone|iPad|iPod/.test(globalThis.navigator.platform)
+  return typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.platform)
     ? '⌘K'
     : 'Ctrl+K';
 }

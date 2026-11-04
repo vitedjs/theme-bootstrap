@@ -21,8 +21,8 @@ export function SearchModal({ search, onNavigate, onClose }: SearchModalProps): 
 
   useEffect(() => {
     inputRef.current?.focus();
-    globalThis.document.documentElement.classList.add('dialog-open');
-    return () => globalThis.document.documentElement.classList.remove('dialog-open');
+    document.documentElement.classList.add('dialog-open');
+    return () => document.documentElement.classList.remove('dialog-open');
   }, []);
 
   function select(item: SearchDocument) {

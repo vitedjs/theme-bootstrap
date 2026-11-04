@@ -258,25 +258,6 @@
   overflow-x: auto;
 }
 
-.vited-bs-copy-button {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  padding: 0.25rem;
-  color: var(--bs-fg-3);
-  background-color: var(--bs-bg-body);
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  border-radius: var(--bs-radius-2);
-}
-
-.vited-bs-copy-button:hover {
-  color: var(--bs-fg-1);
-  background-color: var(--bs-bg-2);
-}
-
 .prose img {
   max-width: 100%;
   height: auto;

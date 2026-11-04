@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { BiCheck, BiClipboard } from 'react-bootstrap-icons-pro';
+import { BiCheck2, BiClipboard } from 'react-bootstrap-icons-pro';
+import { IconButton } from 'react-bootstrap-pro';
 import { useTranslation } from 'react-i18next';
 
 export function CopyButton({ code }: { code: string }) {
@@ -13,9 +14,10 @@ export function CopyButton({ code }: { code: string }) {
   }, [copied]);
 
   return (
-    <button
-      type='button'
-      className='vited-bs-copy-button'
+    <IconButton
+      variant={copied ? 'subtle' : 'outline'}
+      theme={copied ? 'success' : 'secondary'}
+      size='xs'
       aria-label={copied ? t('copied') : t('copy')}
       title={copied ? t('copied') : t('copy')}
       onClick={() => {
@@ -25,7 +27,7 @@ export function CopyButton({ code }: { code: string }) {
         setCopied(true);
       }}
     >
-      {copied ? <BiCheck size={16} /> : <BiClipboard size={16} />}
-    </button>
+      {copied ? <BiCheck2 size={16} /> : <BiClipboard size={16} />}
+    </IconButton>
   );
 }

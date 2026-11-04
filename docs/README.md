@@ -4,8 +4,8 @@ order: 0
 
 # Vited Bootstrap Theme
 
-A Bootstrap 6 theme for Vited documentation sites, built with React 19 and
-`react-bootstrap-icons-pro` icons.
+A Bootstrap 6 theme for Vited documentation sites, built with React 19,
+`react-bootstrap-pro` components, and `react-bootstrap-icons-pro` icons.
 
 Features:
 

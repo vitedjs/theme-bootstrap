@@ -1,0 +1,361 @@
+import { useCallback, useEffect, useMemo, useState, type ReactElement } from 'react';
+import {
+  BiGithub,
+  BiHeartFill,
+  BiList,
+  BiListUl,
+  BiMoon,
+  BiSearch,
+  BiSun,
+  BiX,
+} from 'react-bootstrap-icons-pro';
+import { Button, CloseButton, IconButton, Prose } from 'react-bootstrap-pro';
+import { useTranslation } from 'react-i18next';
+import { useLocation } from 'wouter';
+
+import { LocaleSelect } from './components/locale-select';
+import { MarkdownCodeBlock } from './components/markdown-code-block';
+import { MarkdownHtml } from './components/markdown-html';
+import { MenuItems } from './components/menu-items';
+import { PageNavigation } from './components/page-navigation';
+import { SearchModal } from './components/search-modal';
+import { TocTree } from './components/toc-tree';
+import { getProjectLinks } from './project-links';
+import { createPageSearch } from './search';
+import { collectTocHeadings, useActiveHeading, type TocHeading } from './toc';
+import type { MarkdownComponents, VitedThemeProps } from './types';
+import { useColorScheme } from './use-color-scheme';
+
+const emptyLocales: string[] = [];
+
+export function ThemeApp({
+  pages,
+  routes,
+  routeIndex,
+  title = '',
+  description = '',
+  favicon = '',
+  supportedLocales = emptyLocales,
+  menu,
+  searchIndex = [],
+  packageJSON = {},
+}: VitedThemeProps): ReactElement {
+  const locales = useMemo(
+    () =>
+      supportedLocales.length > 0
+        ? supportedLocales
+        : [...new Set(pages.map((item) => item.locale))],
+    [pages, supportedLocales],
+  );
+  const [pathname, navigate] = useLocation();
+  const route = routes[routeIndex[pathname] ?? -1];
+  const locale = route?.locale ?? locales[0] ?? 'en';
+  const Content = route ? pages[route.page].component : undefined;
+  const { t, i18n } = useTranslation();
+  const [mobileOpened, setMobileOpened] = useState(false);
+  const [tocOpened, setTocOpened] = useState(false);
+  const [searchOpened, setSearchOpened] = useState(false);
+  const [tocHeadings, setTocHeadings] = useState<TocHeading[]>([]);
+  const activeHeadingId = useActiveHeading(tocHeadings);
+  // Collect the outline when a page mounts; the keyed wrapper remounts on navigation.
+  const attachContent = useCallback((element: HTMLDivElement | null) => {
+    setTocHeadings(element ? collectTocHeadings(element) : []);
+    if (element) setTocOpened(false);
+  }, []);
+  const [colorScheme, toggleColorScheme] = useColorScheme();
+  const projectLinks = useMemo(() => getProjectLinks(packageJSON), [packageJSON]);
+  const navigationPages = useMemo(
+    () => pages.filter((item) => item.locale === locale),
+    [pages, locale],
+  );
+  // A single page needs no navigation, unless the site configures a menu of its own.
+  const showNavigation = (menu?.length ?? 0) > 0 || navigationPages.length > 1;
+  const markdownComponents = useMemo<MarkdownComponents>(
+    () => ({ html: MarkdownHtml, pre: MarkdownCodeBlock }),
+    [],
+  );
+  const searchPages = useMemo(
+    () => searchIndex.filter((item) => item.locale.toLowerCase() === locale.toLowerCase()),
+    [searchIndex, locale],
+  );
+  const search = useMemo(() => createPageSearch(searchPages), [searchPages]);
+  const navigation = menu?.length ? (
+    <MenuItems
+      entries={menu}
+      locale={locale}
+      activePath={route?.path}
+      onNavigate={() => setMobileOpened(false)}
+    />
+  ) : (
+    <PageNavigation
+      pages={navigationPages}
+      activePath={route?.path}
+      onNavigate={() => setMobileOpened(false)}
+    />
+  );
+
+  useEffect(() => {
+    globalThis.document.documentElement.lang = locale;
+    void i18n.changeLanguage(locale);
+  }, [i18n, locale]);
+
+  useEffect(() => {
+    function onKeyDown(event: globalThis.KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        setSearchOpened(true);
+      }
+    }
+    globalThis.document.addEventListener('keydown', onKeyDown);
+    return () => globalThis.document.removeEventListener('keydown', onKeyDown);
+  }, []);
+
+  function changeLocale(nextLocale: string) {
+    // Keep the reader on the same route when it exists in the next locale.
+    const nextRoute =
+      routes.find((item) => item.path === route?.path && item.locale === nextLocale) ??
+      routes.find((item) => item.locale === nextLocale);
+    if (!nextRoute) return;
+    const url = new globalThis.URL(globalThis.location.href);
+    url.searchParams.delete('lang');
+    navigate(`${nextRoute.pathname}${url.search}${url.hash}`);
+  }
+
+  return (
+    <div className='vited-bs-app min-vh-100 d-flex flex-column'>
+      <header className='navbar bg-body border-bottom sticky-top vited-bs-header'>
+        <div className='container-fluid h-100 d-flex align-items-center gap-2 flex-nowrap px-3'>
+          {showNavigation ? (
+            <IconButton
+              variant='outline'
+              theme='secondary'
+              className='vited-bs-mobile-only flex-shrink-0'
+              aria-label={mobileOpened ? t('closeNavigation') : t('openNavigation')}
+              aria-expanded={mobileOpened}
+              onClick={() => setMobileOpened((opened) => !opened)}
+            >
+              {mobileOpened ? <BiX size={20} /> : <BiList size={20} />}
+            </IconButton>
+          ) : undefined}
+          {favicon ? (
+            <img src={favicon} alt='' width={24} height={24} className='object-fit-contain' />
+          ) : undefined}
+          <div className='vited-bs-header-title'>
+            <div className='fw-bold text-truncate'>{title || 'Documentation'}</div>
+            {description ? (
+              <div className='fg-3 small text-truncate vited-bs-sm-up'>{description}</div>
+            ) : undefined}
+          </div>
+          <div
+            className={`ms-auto d-flex align-items-center flex-nowrap vited-bs-header-actions${
+              showNavigation ? ' vited-bs-has-navigation' : ''
+            }`}
+          >
+            {searchIndex.length > 0 ? (
+              <Button
+                variant='outline'
+                theme='secondary'
+                className='vited-bs-search-button vited-bs-mobile-icon-button d-flex align-items-center justify-content-between gap-2'
+                aria-label={`${t('search')} ${getSearchShortcut()}`}
+                onClick={() => setSearchOpened(true)}
+              >
+                <span className='d-inline-flex align-items-center gap-2'>
+                  <BiSearch size={20} />
+                  <span className='vited-bs-search-label'>{t('search')}</span>
+                </span>
+                <kbd className='small vited-bs-search-shortcut'>{getSearchShortcut()}</kbd>
+              </Button>
+            ) : undefined}
+            {projectLinks.github ? (
+              <IconButton
+                component='a'
+                variant='outline'
+                theme='secondary'
+                href={projectLinks.github}
+                target='_blank'
+                rel='noreferrer'
+                className='vited-bs-project-link flex-shrink-0'
+                aria-label={t('github')}
+                title={t('github')}
+              >
+                <BiGithub size={20} />
+              </IconButton>
+            ) : undefined}
+            {projectLinks.funding ? (
+              <IconButton
+                component='a'
+                variant='outline'
+                theme='secondary'
+                href={projectLinks.funding}
+                target='_blank'
+                rel='noreferrer'
+                className='vited-bs-project-link flex-shrink-0'
+                aria-label={t('donate')}
+                title={t('donate')}
+              >
+                <BiHeartFill size={20} color='red' />
+              </IconButton>
+            ) : undefined}
+            {locales.length > 1 ? (
+              <LocaleSelect locale={locale} locales={locales} onChange={changeLocale} />
+            ) : undefined}
+            <IconButton
+              variant='outline'
+              theme='secondary'
+              className='flex-shrink-0'
+              aria-label={colorScheme === 'dark' ? t('switchToLight') : t('switchToDark')}
+              title={colorScheme === 'dark' ? t('switchToLight') : t('switchToDark')}
+              onClick={toggleColorScheme}
+            >
+              {colorScheme === 'dark' ? <BiSun size={20} /> : <BiMoon size={20} />}
+            </IconButton>
+          </div>
+        </div>
+      </header>
+      <div className='d-flex flex-grow-1 align-items-stretch'>
+        {showNavigation ? (
+          <aside className='vited-bs-desktop-only border-end vited-bs-sidebar'>
+            <div className='vited-bs-sidebar-inner p-3'>
+              <div className='small fw-semibold fg-3 mb-2'>{t('navigation')}</div>
+              <nav aria-label={t('navigation')}>
+                <ul className='nav flex-column vited-bs-nav gap-1'>{navigation}</ul>
+              </nav>
+            </div>
+          </aside>
+        ) : undefined}
+        <main className='flex-grow-1 vited-bs-main'>
+          <div className='vited-bs-content-layout'>
+            <Prose className='vited-bs-container py-3' key={pathname} ref={attachContent}>
+              {Content ? (
+                <Content components={markdownComponents} />
+              ) : (
+                <p className='fg-3'>{t('noDocuments')}</p>
+              )}
+            </Prose>
+            <aside className='vited-bs-toc' aria-hidden={tocHeadings.length > 0 ? undefined : true}>
+              <div className='vited-bs-toc-inner'>
+                {tocHeadings.length > 0 ? (
+                  <>
+                    <div className='small fw-semibold fg-3 mb-2'>{t('tableOfContents')}</div>
+                    <TocTree
+                      headings={tocHeadings}
+                      activeId={activeHeadingId}
+                      ariaLabel={t('tableOfContents')}
+                    />
+                  </>
+                ) : undefined}
+              </div>
+            </aside>
+          </div>
+        </main>
+      </div>
+      {showNavigation && mobileOpened ? (
+        <div className='vited-bs-mobile-only'>
+          <button
+            type='button'
+            className='vited-bs-offcanvas-backdrop'
+            aria-label={t('closeNavigation')}
+            onClick={() => setMobileOpened(false)}
+          />
+          <aside className='vited-bs-offcanvas-panel bg-body border-end p-3'>
+            <div className='d-flex align-items-center justify-content-between mb-2'>
+              <span className='small fw-semibold fg-3'>{t('navigation')}</span>
+              <CloseButton label={t('closeNavigation')} onClick={() => setMobileOpened(false)} />
+            </div>
+            <nav aria-label={t('navigation')}>
+              <ul className='nav flex-column vited-bs-nav gap-1'>{navigation}</ul>
+            </nav>
+            {projectLinks.github || projectLinks.funding ? (
+              <div className='vited-bs-offcanvas-links border-top mt-3 pt-3 d-flex flex-wrap gap-2'>
+                {projectLinks.github ? (
+                  <Button
+                    component='a'
+                    variant='outline'
+                    theme='secondary'
+                    href={projectLinks.github}
+                    target='_blank'
+                    rel='noreferrer'
+                    className='d-flex align-items-center gap-2'
+                  >
+                    <BiGithub size={18} />
+                    {t('github')}
+                  </Button>
+                ) : undefined}
+                {projectLinks.funding ? (
+                  <Button
+                    component='a'
+                    variant='outline'
+                    theme='secondary'
+                    href={projectLinks.funding}
+                    target='_blank'
+                    rel='noreferrer'
+                    className='d-flex align-items-center gap-2'
+                  >
+                    <BiHeartFill size={18} color='red' />
+                    {t('donate')}
+                  </Button>
+                ) : undefined}
+              </div>
+            ) : undefined}
+          </aside>
+        </div>
+      ) : undefined}
+      {tocHeadings.length > 0 ? (
+        <>
+          <Button
+            variant='solid'
+            theme='primary'
+            className='rounded-circle shadow vited-bs-toc-toggle'
+            aria-label={tocOpened ? t('closeTableOfContents') : t('openTableOfContents')}
+            aria-expanded={tocOpened}
+            onClick={() => setTocOpened((opened) => !opened)}
+          >
+            {tocOpened ? <BiX size={22} /> : <BiListUl size={22} />}
+          </Button>
+          {tocOpened ? (
+            <div className='vited-bs-toc-mobile'>
+              <button
+                type='button'
+                className='vited-bs-offcanvas-backdrop'
+                aria-label={t('closeTableOfContents')}
+                onClick={() => setTocOpened(false)}
+              />
+              <aside className='vited-bs-toc-panel bg-body border-start p-3'>
+                <div className='d-flex align-items-center justify-content-between mb-2'>
+                  <span className='small fw-semibold fg-3'>{t('tableOfContents')}</span>
+                  <CloseButton
+                    label={t('closeTableOfContents')}
+                    onClick={() => setTocOpened(false)}
+                  />
+                </div>
+                <TocTree
+                  headings={tocHeadings}
+                  activeId={activeHeadingId}
+                  ariaLabel={t('tableOfContents')}
+                  onNavigate={() => setTocOpened(false)}
+                />
+              </aside>
+            </div>
+          ) : undefined}
+        </>
+      ) : undefined}
+      {searchIndex.length > 0 && searchOpened ? (
+        <SearchModal
+          search={search}
+          onNavigate={(path) => {
+            navigate(path);
+            setMobileOpened(false);
+          }}
+          onClose={() => setSearchOpened(false)}
+        />
+      ) : undefined}
+    </div>
+  );
+}
+
+function getSearchShortcut(): string {
+  return globalThis.navigator !== undefined &&
+    /Mac|iPhone|iPad|iPod/.test(globalThis.navigator.platform)
+    ? '⌘K'
+    : 'Ctrl+K';
+}

@@ -5,8 +5,8 @@ order: 0
 
 # Vited Bootstrap 主题
 
-基于 Bootstrap 6 的 Vited 文档主题，使用 React 19 和
-`react-bootstrap-icons-pro` 图标构建。
+基于 Bootstrap 6 的 Vited 文档主题，使用 React 19、`react-bootstrap-pro`
+组件和 `react-bootstrap-icons-pro` 图标构建。
 
 功能特性：
 

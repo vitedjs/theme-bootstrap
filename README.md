@@ -2,8 +2,9 @@
 
 A Bootstrap 6 theme for Vited. It renders generated document pages with a
 responsive header and sidebar layout, and includes a persisted light/dark theme
-toggle built on Bootstrap's `data-bs-theme` color modes. Icons come from
-`react-bootstrap-icons-pro`. Interface labels are available in English and
+toggle built on Bootstrap's `data-bs-theme` color modes. UI components come from
+`react-bootstrap-pro`, and icons come from `react-bootstrap-icons-pro`.
+Interface labels are available in English and
 Simplified Chinese; the language selector appears when multiple locales are
 configured. These labels use `react-i18next` resources in
 [`src/i18n.ts`](./src/i18n.ts). When supplied with Vited's generated search index, it

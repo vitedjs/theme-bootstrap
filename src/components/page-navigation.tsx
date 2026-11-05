@@ -7,6 +7,7 @@ import type { NavigationProps } from './navigation-types';
 interface PageNavigationNode {
   key: string;
   title: string;
+  badge?: 'new' | 'deprecated';
   page?: VitedPage;
   children: PageNavigationNode[];
 }
@@ -25,7 +26,13 @@ export function PageNavigation({
       .filter(Boolean)
       .map((segment) => decodeURIComponent(segment));
     if (segments.length === 0) {
-      level.push({ key: `${page.locale}:${page.path}`, title: page.title, page, children: [] });
+      level.push({
+        key: `${page.locale}:${page.path}`,
+        title: page.title,
+        badge: getPageBadge(page),
+        page,
+        children: [],
+      });
       continue;
     }
 
@@ -40,6 +47,7 @@ export function PageNavigation({
       level = node.children;
       if (route === page.path) {
         node.title = page.title;
+        node.badge = getPageBadge(page);
         node.page = page;
       }
     }
@@ -52,7 +60,20 @@ function renderPageNavigationNodes(nodes: PageNavigationNode[], props: Navigatio
   return nodes.map((node) => (
     <NavTreeItem
       key={node.key}
-      label={node.title}
+      label={
+        <>
+          <span>{node.title}</span>
+          {node.badge ? (
+            <span
+              className={`badge rounded-pill ${
+                node.badge === 'new' ? 'text-bg-success' : 'vited-bs-badge-deprecated'
+              }`}
+            >
+              {node.badge}
+            </span>
+          ) : undefined}
+        </>
+      }
       active={node.page?.path === props.activePath}
       defaultOpened={node.children.some(
         (child) =>
@@ -64,6 +85,11 @@ function renderPageNavigationNodes(nodes: PageNavigationNode[], props: Navigatio
       {node.children.length > 0 ? renderPageNavigationNodes(node.children, props) : undefined}
     </NavTreeItem>
   ));
+}
+
+function getPageBadge(page: VitedPage): 'new' | 'deprecated' | undefined {
+  const badge = page.frontmatter.badge;
+  return badge === 'new' || badge === 'deprecated' ? badge : undefined;
 }
 
 function humanize(value: string): string {

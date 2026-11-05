@@ -3,7 +3,7 @@ import { BiChevronDown } from 'react-bootstrap-icons-pro';
 import { Link } from 'wouter';
 
 interface NavTreeItemProps {
-  label: string;
+  label: ReactNode;
   active?: boolean;
   defaultOpened?: boolean;
   /** Internal route rendered with the client router. */
@@ -29,7 +29,9 @@ export function NavTreeItem({
   const toggle = hasChildren ? () => setOpened((value) => !value) : undefined;
   const content = (
     <>
-      <span className='flex-grow-1'>{label}</span>
+      <span className='d-flex flex-grow-1 align-items-center justify-content-between gap-2'>
+        {label}
+      </span>
       {hasChildren ? (
         <BiChevronDown
           className={`flex-shrink-0 vited-bs-chevron${opened ? '' : ' vited-bs-chevron-closed'}`}

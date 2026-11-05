@@ -1,4 +1,5 @@
 import type { ReactElement, ReactNode } from 'react';
+import { Badge } from 'react-bootstrap-pro';
 
 import type { VitedPage } from '../types';
 import { NavTreeItem } from './nav-tree-item';
@@ -56,6 +57,11 @@ export function PageNavigation({
   return <>{renderPageNavigationNodes(nodes, { activePath, onNavigate })}</>;
 }
 
+const badgeThemeMap = {
+  new: 'success' as const,
+  deprecated: 'warning' as const,
+};
+
 function renderPageNavigationNodes(nodes: PageNavigationNode[], props: NavigationProps): ReactNode {
   return nodes.map((node) => (
     <NavTreeItem
@@ -63,15 +69,11 @@ function renderPageNavigationNodes(nodes: PageNavigationNode[], props: Navigatio
       label={
         <>
           <span>{node.title}</span>
-          {node.badge ? (
-            <span
-              className={`badge rounded-pill ${
-                node.badge === 'new' ? 'text-bg-success' : 'vited-bs-badge-deprecated'
-              }`}
-            >
+          {node.badge && (
+            <Badge variant='subtle' theme={badgeThemeMap[node.badge]}>
               {node.badge}
-            </span>
-          ) : undefined}
+            </Badge>
+          )}
         </>
       }
       active={node.page?.path === props.activePath}

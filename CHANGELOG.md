@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.1.4 - 2026-11-05
+
+### Added
+
+- Show green `new` and orange `deprecated` badges from page frontmatter in the generated sidebar.
+
 ## 0.1.3 - 2026-11-03
 
 ### Fixed

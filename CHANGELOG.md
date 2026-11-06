@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.1.5 - 2026-11-06
+
+### Added
+
+- Use Wouter client-side navigation for links between documentation pages.
+
 ## 0.1.4 - 2026-11-05
 
 ### Added

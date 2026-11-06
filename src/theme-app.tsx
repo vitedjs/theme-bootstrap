@@ -16,6 +16,7 @@ import { useLocation } from 'wouter';
 import { LocaleSelect } from './components/locale-select';
 import { MarkdownCodeBlock } from './components/markdown-code-block';
 import { MarkdownHtml } from './components/markdown-html';
+import { MarkdownLink } from './components/markdown-link';
 import { MenuItems } from './components/menu-items';
 import { PageNavigation } from './components/page-navigation';
 import { SearchModal } from './components/search-modal';
@@ -71,7 +72,7 @@ export function ThemeApp({
   // A single page needs no navigation, unless the site configures a menu of its own.
   const showNavigation = (menu?.length ?? 0) > 0 || navigationPages.length > 1;
   const markdownComponents = useMemo<MarkdownComponents>(
-    () => ({ html: MarkdownHtml, pre: MarkdownCodeBlock }),
+    () => ({ a: MarkdownLink, html: MarkdownHtml, pre: MarkdownCodeBlock }),
     [],
   );
   const searchPages = useMemo(

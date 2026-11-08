@@ -130,7 +130,7 @@ export function ThemeApp({
             <IconButton
               variant='outline'
               theme='secondary'
-              className='vited-bs-mobile-only flex-shrink-0'
+              d={{ xs: 'flex', md: 'none' }}
               aria-label={mobileOpened ? t('closeNavigation') : t('openNavigation')}
               aria-expanded={mobileOpened}
               onClick={() => setMobileOpened((opened) => !opened)}

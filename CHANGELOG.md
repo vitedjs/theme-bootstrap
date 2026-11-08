@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.1.6 - 2026-11-07
+
+### Changed
+
+- Update react-bootstrap-pro to 0.4.0
+
 ## 0.1.5 - 2026-11-06
 
 ### Added

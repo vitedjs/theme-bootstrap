@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.1.7 - 2026-11-13
+
 ### Added
 
 - Add an automatic color scheme option that follows the system preference.

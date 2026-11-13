@@ -37,9 +37,9 @@ export default defineConfig({
 
 ## 色彩模式
 
-在用户通过页头按钮选择明暗模式之前，主题跟随系统色彩方案。用户的显式选择会
-持久化到 `localStorage`，并通过 Bootstrap 的 `data-bs-theme` 属性应用，因此
-所有 Bootstrap 组件都会自动适配。
+在用户通过页头的色彩模式菜单选择其他模式之前，主题跟随系统色彩方案。菜单提供
+自动、浅色和深色三种模式；用户的选择会持久化到 `localStorage`，并通过 Bootstrap
+的 `data-bs-theme` 属性应用，因此所有 Bootstrap 组件都会自动适配。
 
 ## 项目链接
 

@@ -2,8 +2,14 @@
 
 ## Unreleased
 
+### Added
+
+- Add an automatic color scheme option that follows the system preference.
+
 ### Changed
 
+- Replace the light/dark header toggle with a color scheme menu offering
+  automatic, light, and dark modes.
 - Update react-bootstrap-pro to 0.7.0 and persist the color scheme with its
   `useColorScheme` hook, which already handles `localStorage`. The stored
   preference now uses the `colorScheme` key and defaults to following the

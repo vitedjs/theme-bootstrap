@@ -42,10 +42,10 @@ confirm with `Enter`.
 
 ## Color modes
 
-The theme follows the system color scheme until the user picks light or dark
-with the header toggle. The explicit choice is persisted in `localStorage` and
-applied through Bootstrap's `data-bs-theme` attribute, so all Bootstrap
-components adapt automatically.
+The theme follows the system color scheme until the reader picks another mode
+from the header color scheme menu. The menu offers automatic, light, and dark
+modes; the choice is persisted in `localStorage` and applied through Bootstrap's
+`data-bs-theme` attribute, so all Bootstrap components adapt automatically.
 
 ## Project links
 

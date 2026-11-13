@@ -51,6 +51,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@guoyunhe/react-storage": "^2.0.3",
     "bootstrap": "^6.0.0-alpha.1",
     "fuse.js": "^7.5.0",
     "html-react-parser": "^6.1.9",

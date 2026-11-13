@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Update react-bootstrap-pro to 0.6.0 and read the resolved color scheme with its `useColorScheme` hook.
+
 ## 0.1.6 - 2026-11-07
 
 ### Changed

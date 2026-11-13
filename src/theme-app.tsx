@@ -23,9 +23,9 @@ import { SearchModal } from './components/search-modal';
 import { TocTree } from './components/toc-tree';
 import { getProjectLinks } from './project-links';
 import { createPageSearch } from './search';
+import { useThemeColorScheme } from './theme-color-scheme';
 import { collectTocHeadings, useActiveHeading, type TocHeading } from './toc';
 import type { MarkdownComponents, VitedThemeProps } from './types';
-import { useColorScheme } from './use-color-scheme';
 
 const emptyLocales: string[] = [];
 
@@ -63,7 +63,7 @@ export function ThemeApp({
     setTocHeadings(element ? collectTocHeadings(element) : []);
     if (element) setTocOpened(false);
   }, []);
-  const [colorScheme, toggleColorScheme] = useColorScheme();
+  const [colorScheme, toggleColorScheme] = useThemeColorScheme();
   const projectLinks = useMemo(() => getProjectLinks(packageJSON), [packageJSON]);
   const navigationPages = useMemo(
     () => pages.filter((item) => item.locale === locale),

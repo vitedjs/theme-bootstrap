@@ -1,4 +1,4 @@
 minimumReleaseAgeExclude:
   - oxlint-config-recommended@1.2.1
   - bootstrap@6.0.0-alpha.1
-  - react-bootstrap-pro@0.1.0 || 0.2.0 || 0.4.0
+  - react-bootstrap-pro@0.1.0 || 0.2.0 || 0.4.0 || 0.6.0

@@ -4,7 +4,10 @@
 
 ### Changed
 
-- Update react-bootstrap-pro to 0.6.0 and read the resolved color scheme with its `useColorScheme` hook.
+- Update react-bootstrap-pro to 0.7.0 and persist the color scheme with its
+  `useColorScheme` hook, which already handles `localStorage`. The stored
+  preference now uses the `colorScheme` key and defaults to following the
+  system preference.
 
 ## 0.1.6 - 2026-11-07
 

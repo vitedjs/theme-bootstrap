@@ -9,7 +9,7 @@ import {
   BiSun,
   BiX,
 } from 'react-bootstrap-icons-pro';
-import { Button, CloseButton, IconButton, Prose } from 'react-bootstrap-pro';
+import { Button, CloseButton, IconButton, Prose, useColorScheme } from 'react-bootstrap-pro';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'wouter';
 
@@ -23,7 +23,6 @@ import { SearchModal } from './components/search-modal';
 import { TocTree } from './components/toc-tree';
 import { getProjectLinks } from './project-links';
 import { createPageSearch } from './search';
-import { useThemeColorScheme } from './theme-color-scheme';
 import { collectTocHeadings, useActiveHeading, type TocHeading } from './toc';
 import type { MarkdownComponents, VitedThemeProps } from './types';
 
@@ -63,7 +62,7 @@ export function ThemeApp({
     setTocHeadings(element ? collectTocHeadings(element) : []);
     if (element) setTocOpened(false);
   }, []);
-  const [colorScheme, toggleColorScheme] = useThemeColorScheme();
+  const [colorScheme, setColorScheme] = useColorScheme();
   const projectLinks = useMemo(() => getProjectLinks(packageJSON), [packageJSON]);
   const navigationPages = useMemo(
     () => pages.filter((item) => item.locale === locale),
@@ -206,7 +205,7 @@ export function ThemeApp({
               className='flex-shrink-0'
               aria-label={colorScheme === 'dark' ? t('switchToLight') : t('switchToDark')}
               title={colorScheme === 'dark' ? t('switchToLight') : t('switchToDark')}
-              onClick={toggleColorScheme}
+              onClick={() => setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')}
             >
               {colorScheme === 'dark' ? <BiSun size={20} /> : <BiMoon size={20} />}
             </IconButton>

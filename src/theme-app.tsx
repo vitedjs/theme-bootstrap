@@ -1,25 +1,16 @@
 import { useCallback, useEffect, useMemo, useState, type ReactElement } from 'react';
-import {
-  BiGithub,
-  BiHeartFill,
-  BiList,
-  BiListUl,
-  BiMoon,
-  BiSearch,
-  BiSun,
-  BiX,
-} from 'react-bootstrap-icons-pro';
-import { Button, CloseButton, IconButton, Prose, useColorScheme } from 'react-bootstrap-pro';
+import { BiGithub, BiHeartFill, BiListUl, BiX } from 'react-bootstrap-icons-pro';
+import { Button, CloseButton, Prose } from 'react-bootstrap-pro';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'wouter';
 
-import { LocaleSelect } from './components/locale-select';
 import { MarkdownCodeBlock } from './components/markdown-code-block';
 import { MarkdownHtml } from './components/markdown-html';
 import { MarkdownLink } from './components/markdown-link';
 import { MenuItems } from './components/menu-items';
 import { PageNavigation } from './components/page-navigation';
 import { SearchModal } from './components/search-modal';
+import { SiteNavbar } from './components/site-navbar';
 import { TocTree } from './components/toc-tree';
 import { getProjectLinks } from './project-links';
 import { createPageSearch } from './search';
@@ -62,7 +53,6 @@ export function ThemeApp({
     setTocHeadings(element ? collectTocHeadings(element) : []);
     if (element) setTocOpened(false);
   }, []);
-  const [colorScheme, setColorScheme] = useColorScheme();
   const projectLinks = useMemo(() => getProjectLinks(packageJSON), [packageJSON]);
   const navigationPages = useMemo(
     () => pages.filter((item) => item.locale === locale),
@@ -123,95 +113,20 @@ export function ThemeApp({
 
   return (
     <div className='vited-bs-app min-vh-100 d-flex flex-column'>
-      <header className='navbar bg-body border-bottom sticky-top vited-bs-header'>
-        <div className='container-fluid h-100 d-flex align-items-center gap-2 flex-nowrap px-3'>
-          {showNavigation ? (
-            <IconButton
-              variant='outline'
-              theme='secondary'
-              d={{ xs: 'flex', md: 'none' }}
-              aria-label={mobileOpened ? t('closeNavigation') : t('openNavigation')}
-              aria-expanded={mobileOpened}
-              onClick={() => setMobileOpened((opened) => !opened)}
-            >
-              {mobileOpened ? <BiX size={20} /> : <BiList size={20} />}
-            </IconButton>
-          ) : undefined}
-          {favicon ? (
-            <img src={favicon} alt='' width={24} height={24} className='object-fit-contain' />
-          ) : undefined}
-          <div className='vited-bs-header-title'>
-            <div className='fw-bold text-truncate'>{title || 'Documentation'}</div>
-            {description ? (
-              <div className='fg-3 small text-truncate vited-bs-sm-up'>{description}</div>
-            ) : undefined}
-          </div>
-          <div
-            className={`ms-auto d-flex align-items-center flex-nowrap vited-bs-header-actions${
-              showNavigation ? ' vited-bs-has-navigation' : ''
-            }`}
-          >
-            {searchIndex.length > 0 ? (
-              <Button
-                variant='outline'
-                theme='secondary'
-                className='vited-bs-search-button vited-bs-mobile-icon-button d-flex align-items-center justify-content-between gap-2'
-                aria-label={`${t('search')} ${getSearchShortcut()}`}
-                onClick={() => setSearchOpened(true)}
-              >
-                <span className='d-inline-flex align-items-center gap-2'>
-                  <BiSearch size={20} />
-                  <span className='vited-bs-search-label'>{t('search')}</span>
-                </span>
-                <kbd className='small vited-bs-search-shortcut'>{getSearchShortcut()}</kbd>
-              </Button>
-            ) : undefined}
-            {projectLinks.github ? (
-              <IconButton
-                component='a'
-                variant='outline'
-                theme='secondary'
-                href={projectLinks.github}
-                target='_blank'
-                rel='noreferrer'
-                className='vited-bs-project-link flex-shrink-0'
-                aria-label={t('github')}
-                title={t('github')}
-              >
-                <BiGithub size={20} />
-              </IconButton>
-            ) : undefined}
-            {projectLinks.funding ? (
-              <IconButton
-                component='a'
-                variant='outline'
-                theme='secondary'
-                href={projectLinks.funding}
-                target='_blank'
-                rel='noreferrer'
-                className='vited-bs-project-link flex-shrink-0'
-                aria-label={t('donate')}
-                title={t('donate')}
-              >
-                <BiHeartFill size={20} color='red' />
-              </IconButton>
-            ) : undefined}
-            {locales.length > 1 ? (
-              <LocaleSelect locale={locale} locales={locales} onChange={changeLocale} />
-            ) : undefined}
-            <IconButton
-              variant='outline'
-              theme='secondary'
-              className='flex-shrink-0'
-              aria-label={colorScheme === 'dark' ? t('switchToLight') : t('switchToDark')}
-              title={colorScheme === 'dark' ? t('switchToLight') : t('switchToDark')}
-              onClick={() => setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')}
-            >
-              {colorScheme === 'dark' ? <BiSun size={20} /> : <BiMoon size={20} />}
-            </IconButton>
-          </div>
-        </div>
-      </header>
+      <SiteNavbar
+        title={title}
+        description={description}
+        favicon={favicon}
+        projectLinks={projectLinks}
+        showNavigation={showNavigation}
+        navigationOpened={mobileOpened}
+        onToggleNavigation={() => setMobileOpened((opened) => !opened)}
+        searchEnabled={searchIndex.length > 0}
+        onOpenSearch={() => setSearchOpened(true)}
+        locales={locales}
+        locale={locale}
+        onChangeLocale={changeLocale}
+      />
       <div className='d-flex flex-grow-1 align-items-stretch'>
         {showNavigation ? (
           <aside className='vited-bs-desktop-only border-end vited-bs-sidebar'>
@@ -351,10 +266,4 @@ export function ThemeApp({
       ) : undefined}
     </div>
   );
-}
-
-function getSearchShortcut(): string {
-  return typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.platform)
-    ? '⌘K'
-    : 'Ctrl+K';
 }

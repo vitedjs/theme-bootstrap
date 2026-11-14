@@ -11,6 +11,11 @@
   `ColorSchemeProvider`. The provider applies the stored scheme on mount even
   when no color scheme toggle is rendered.
 
+### Fixed
+
+- Clip code block contents to the rounded border so the inner code background no
+  longer covers the corners.
+
 ## 0.1.7 - 2026-11-13
 
 ### Added

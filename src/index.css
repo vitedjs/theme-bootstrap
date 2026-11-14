@@ -232,6 +232,7 @@
 
 .vited-bs-code-block {
   margin-bottom: 1rem;
+  overflow: hidden;
 }
 
 .vited-bs-code-block pre {

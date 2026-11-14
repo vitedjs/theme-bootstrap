@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import { ColorSchemeProvider } from 'react-bootstrap-pro';
 import { I18nextProvider } from 'react-i18next';
 import { Router } from 'wouter';
 
@@ -14,9 +15,11 @@ export type { VitedMenuEntry, VitedPage, VitedRoute, VitedThemeProps } from './t
 export function VitedTheme(props: VitedThemeProps): ReactElement {
   return (
     <I18nextProvider i18n={themeI18n}>
-      <Router base={props.basePath ?? ''}>
-        <ThemeApp {...props} />
-      </Router>
+      <ColorSchemeProvider>
+        <Router base={props.basePath ?? ''}>
+          <ThemeApp {...props} />
+        </Router>
+      </ColorSchemeProvider>
     </I18nextProvider>
   );
 }

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Changed
+
+- Update react-bootstrap-pro to 0.8.0 and render the table of contents with its
+  `Toc` component, `collectTocHeadings` utility, and `useActiveHeading` hook
+  instead of the theme's own copy.
+- Read the color scheme from the `useColorScheme` context, which now requires a
+  `ColorSchemeProvider`. The provider applies the stored scheme on mount even
+  when no color scheme toggle is rendered.
+
 ## 0.1.7 - 2026-11-13
 
 ### Added

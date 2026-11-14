@@ -332,37 +332,25 @@
   overflow-y: auto;
 }
 
-.vited-bs-toc-nav,
-.vited-bs-toc-sublist {
-  padding-left: 0;
-  margin-bottom: 0;
-  list-style: none;
+.vited-bs-toc-tree {
+  font-size: 0.875rem;
 }
 
 /* Long headings wrap inside the narrow TOC column instead of widening it. */
-.vited-bs-toc-tree .nav-item {
-  display: block;
-}
-
-.vited-bs-toc-tree .vited-bs-toc-nav .nav-link,
-.vited-bs-toc-tree .vited-bs-toc-sublist .nav-link {
+.vited-bs-toc-tree .nav .nav-link {
   padding-block: 0.25rem;
-  font-size: 0.875rem;
   color: var(--bs-fg-3);
-  justify-content: flex-start;
   border-radius: var(--bs-radius-2);
   white-space: normal;
   overflow-wrap: break-word;
 }
 
-.vited-bs-toc-tree .vited-bs-toc-nav .nav-link:hover,
-.vited-bs-toc-tree .vited-bs-toc-sublist .nav-link:hover {
+.vited-bs-toc-tree .nav .nav-link:hover {
   color: var(--bs-fg-1);
   background-color: var(--bs-bg-2);
 }
 
-.vited-bs-toc-tree .vited-bs-toc-nav .nav-link.active,
-.vited-bs-toc-tree .vited-bs-toc-sublist .nav-link.active {
+.vited-bs-toc-tree .nav .nav-link.active {
   font-weight: 600;
   color: var(--bs-accent-fg-emphasis);
   background-color: var(--bs-accent-bg-subtle);

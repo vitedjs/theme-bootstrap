@@ -1,4 +1,3 @@
-import { useLocalStorage } from '@guoyunhe/react-storage';
 import type { ReactElement } from 'react';
 import { BiCheckLg, BiCircleHalf, BiMoon, BiSun } from 'react-bootstrap-icons-pro';
 import {
@@ -6,7 +5,6 @@ import {
   Menu,
   MenuItem,
   MenuItemIcon,
-  colorSchemeStorageKey,
   useColorScheme,
   type ColorScheme,
 } from 'react-bootstrap-pro';
@@ -23,9 +21,7 @@ const icons: Record<ColorScheme, typeof BiSun> = {
 /** Header menu that selects between the automatic, light, and dark color schemes. */
 export function ColorSchemeToggle(): ReactElement {
   const { t } = useTranslation();
-  const [storedColorScheme] = useLocalStorage<ColorScheme>(colorSchemeStorageKey, 'auto');
-  const [, setColorScheme] = useColorScheme();
-  const colorScheme = isColorScheme(storedColorScheme) ? storedColorScheme : 'auto';
+  const { colorScheme, setColorScheme } = useColorScheme();
   const labels: Record<ColorScheme, string> = {
     auto: t('colorSchemeAuto'),
     light: t('colorSchemeLight'),
@@ -74,8 +70,4 @@ export function ColorSchemeToggle(): ReactElement {
       })}
     </Menu>
   );
-}
-
-function isColorScheme(value: unknown): value is ColorScheme {
-  return value === 'auto' || value === 'light' || value === 'dark';
 }

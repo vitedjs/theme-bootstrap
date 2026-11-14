@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useMemo, useState, type ReactElement } from 'react';
 import { BiGithub, BiHeartFill, BiListUl, BiX } from 'react-bootstrap-icons-pro';
-import { Button, CloseButton, Prose } from 'react-bootstrap-pro';
+import {
+  Button,
+  CloseButton,
+  Prose,
+  Toc,
+  collectTocHeadings,
+  useActiveHeading,
+  type TocHeading,
+} from 'react-bootstrap-pro';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'wouter';
 
@@ -11,10 +19,8 @@ import { MenuItems } from './components/menu-items';
 import { PageNavigation } from './components/page-navigation';
 import { SearchModal } from './components/search-modal';
 import { SiteNavbar } from './components/site-navbar';
-import { TocTree } from './components/toc-tree';
 import { getProjectLinks } from './project-links';
 import { createPageSearch } from './search';
-import { collectTocHeadings, useActiveHeading, type TocHeading } from './toc';
 import type { MarkdownComponents, VitedThemeProps } from './types';
 
 const emptyLocales: string[] = [];
@@ -50,7 +56,9 @@ export function ThemeApp({
   const activeHeadingId = useActiveHeading(tocHeadings);
   // Collect the outline when a page mounts; the keyed wrapper remounts on navigation.
   const attachContent = useCallback((element: HTMLDivElement | null) => {
-    setTocHeadings(element ? collectTocHeadings(element) : []);
+    setTocHeadings(
+      element ? collectTocHeadings(element, { ignoreSelector: '.vited-heading-anchor' }) : [],
+    );
     if (element) setTocOpened(false);
   }, []);
   const projectLinks = useMemo(() => getProjectLinks(packageJSON), [packageJSON]);
@@ -152,10 +160,11 @@ export function ThemeApp({
                 {tocHeadings.length > 0 ? (
                   <>
                     <div className='small fw-semibold fg-3 mb-2'>{t('tableOfContents')}</div>
-                    <TocTree
+                    <Toc
                       headings={tocHeadings}
                       activeId={activeHeadingId}
-                      ariaLabel={t('tableOfContents')}
+                      label={t('tableOfContents')}
+                      className='vited-bs-toc-tree'
                     />
                   </>
                 ) : undefined}
@@ -243,10 +252,11 @@ export function ThemeApp({
                     onClick={() => setTocOpened(false)}
                   />
                 </div>
-                <TocTree
+                <Toc
                   headings={tocHeadings}
                   activeId={activeHeadingId}
-                  ariaLabel={t('tableOfContents')}
+                  label={t('tableOfContents')}
+                  className='vited-bs-toc-tree'
                   onNavigate={() => setTocOpened(false)}
                 />
               </aside>

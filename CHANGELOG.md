@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.1.8 - 2026-11-14
+
 ### Changed
 
 - Update react-bootstrap-pro to 0.8.0 and render the table of contents with its

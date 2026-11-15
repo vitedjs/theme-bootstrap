@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useColorScheme } from 'react-bootstrap-pro';
 import { createHighlighter, type BundledLanguage } from 'shiki';
 
 import { CopyButton } from './copy-button';
@@ -36,6 +37,8 @@ interface CodeBlockProps {
 
 export function CodeBlock({ code, language }: CodeBlockProps) {
   const [html, setHtml] = useState<string>();
+  const { computedColorScheme } = useColorScheme();
+  const theme = computedColorScheme === 'dark' ? 'github-dark' : 'github-light';
 
   useEffect(() => {
     let cancelled = false;
@@ -49,7 +52,7 @@ export function CodeBlock({ code, language }: CodeBlockProps) {
         setHtml(
           highlighter.codeToHtml(code, {
             lang,
-            themes: { light: 'github-light', dark: 'github-dark' },
+            theme,
           }),
         );
       })
@@ -59,7 +62,7 @@ export function CodeBlock({ code, language }: CodeBlockProps) {
     return () => {
       cancelled = true;
     };
-  }, [code, language]);
+  }, [code, language, theme]);
 
   return (
     <div className='vited-bs-code-block position-relative border rounded'>

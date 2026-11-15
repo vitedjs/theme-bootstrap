@@ -9,6 +9,7 @@ import { LocaleSelect } from './locale-select';
 
 interface SiteNavbarProps {
   title: string;
+  version: string;
   description: string;
   favicon: string;
   projectLinks: ProjectLinks;
@@ -24,6 +25,7 @@ interface SiteNavbarProps {
 
 export function SiteNavbar({
   title,
+  version,
   description,
   favicon,
   projectLinks,
@@ -67,6 +69,12 @@ export function SiteNavbar({
         <Box className='vited-bs-header-title'>
           <Box fontWeight='bold' textTruncate>
             {title || 'Documentation'}
+            {version ? (
+              <Box component='span' fontWeight='normal' fontSize='xs' fg='3'>
+                {' '}
+                {version}
+              </Box>
+            ) : undefined}
           </Box>
           {description ? (
             <Box fg='3' fontSize='sm' textTruncate className='vited-bs-sm-up'>

@@ -20,6 +20,7 @@ import { PageNavigation } from './components/page-navigation';
 import { SearchModal } from './components/search-modal';
 import { SiteNavbar } from './components/site-navbar';
 import { formatDocumentTitle } from './document-title';
+import { formatPackageVersion } from './package-version';
 import { getProjectLinks } from './project-links';
 import { createPageSearch } from './search';
 import type { MarkdownComponents, VitedThemeProps } from './types';
@@ -64,6 +65,7 @@ export function ThemeApp({
     if (element) setTocOpened(false);
   }, []);
   const projectLinks = useMemo(() => getProjectLinks(packageJSON), [packageJSON]);
+  const version = formatPackageVersion(packageJSON);
   const navigationPages = useMemo(
     () => pages.filter((item) => item.locale === locale),
     [pages, locale],
@@ -129,6 +131,7 @@ export function ThemeApp({
     <div className='vited-bs-app min-vh-100 d-flex flex-column'>
       <SiteNavbar
         title={title}
+        version={version}
         description={description}
         favicon={favicon}
         projectLinks={projectLinks}

@@ -1,6 +1,6 @@
 {
   "name": "@vited/theme-bootstrap",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "description": "Bootstrap React theme for Vited documentation sites",
   "keywords": [
     "bootstrap",
@@ -85,7 +85,7 @@
     "vitest": "^5.1.0"
   },
   "peerDependencies": {
-    "@vited/core": "^0.4.0",
+    "@vited/core": "^0.5.0",
     "react": "^19.2.0"
   },
   "lint-staged": {

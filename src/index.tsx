@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react';
 import { ColorSchemeProvider } from 'react-bootstrap-pro';
 import { I18nextProvider } from 'react-i18next';
+import { ScrollRestore } from 'react-scroll-restore';
 import { Router } from 'wouter';
 
 import { themeI18n } from './i18n';
@@ -17,6 +18,7 @@ export function VitedTheme(props: VitedThemeProps): ReactElement {
     <I18nextProvider i18n={themeI18n}>
       <ColorSchemeProvider>
         <Router base={props.basePath ?? ''}>
+          <ScrollRestore />
           <ThemeApp {...props} />
         </Router>
       </ColorSchemeProvider>

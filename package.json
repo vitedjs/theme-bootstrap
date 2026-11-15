@@ -58,6 +58,7 @@
     "react-bootstrap-icons-pro": "^1.2.0",
     "react-bootstrap-pro": "^0.8.0",
     "react-i18next": "^17.1.13",
+    "react-scroll-restore": "^0.1.1",
     "shiki": "^4.6.0",
     "wouter": "^3.13.0"
   },

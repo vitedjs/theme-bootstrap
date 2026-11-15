@@ -19,6 +19,7 @@ import { MenuItems } from './components/menu-items';
 import { PageNavigation } from './components/page-navigation';
 import { SearchModal } from './components/search-modal';
 import { SiteNavbar } from './components/site-navbar';
+import { formatDocumentTitle } from './document-title';
 import { getProjectLinks } from './project-links';
 import { createPageSearch } from './search';
 import type { MarkdownComponents, VitedThemeProps } from './types';
@@ -48,6 +49,7 @@ export function ThemeApp({
   const route = routes[routeIndex[pathname] ?? -1];
   const locale = route?.locale ?? locales[0] ?? 'en';
   const Content = route ? pages[route.page].component : undefined;
+  const pageTitle = route ? pages[route.page].title : '';
   const { t, i18n } = useTranslation();
   const [mobileOpened, setMobileOpened] = useState(false);
   const [tocOpened, setTocOpened] = useState(false);
@@ -96,6 +98,10 @@ export function ThemeApp({
     document.documentElement.lang = locale;
     void i18n.changeLanguage(locale);
   }, [i18n, locale]);
+
+  useEffect(() => {
+    document.title = formatDocumentTitle(pageTitle, title, packageJSON);
+  }, [packageJSON, pageTitle, title]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {

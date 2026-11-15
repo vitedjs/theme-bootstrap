@@ -15,7 +15,8 @@ the supplied `packageJSON` includes valid `repository` and `funding` URLs. The
 documentation favicon discovered by Vited is displayed to the left of the
 header title. Markdown and MDX fenced code blocks are highlighted with Shiki
 (github-light/github-dark dual themes), including copy controls with translated
-labels. Markdown and MDX headings show an anchor link on hover, and the page outline is shown in a table of contents on the right of the content; on small screens it opens from a floating button.
+labels. The browser tab title shows the current page title followed by the
+site title. Markdown and MDX headings show an anchor link on hover, and the page outline is shown in a table of contents on the right of the content; on small screens it opens from a floating button.
 
 ```ts
 import { defineConfig } from '@vited/core';

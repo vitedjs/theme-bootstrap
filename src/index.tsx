@@ -3,8 +3,8 @@ import { ColorSchemeProvider } from 'react-bootstrap-pro';
 import { I18nextProvider } from 'react-i18next';
 import { Router } from 'wouter';
 
+import { ThemeApp } from './components/theme-app';
 import { themeI18n } from './i18n';
-import { ThemeApp } from './theme-app';
 import type { VitedThemeProps } from './types';
 
 import 'bootstrap/dist/css/bootstrap.min.css';

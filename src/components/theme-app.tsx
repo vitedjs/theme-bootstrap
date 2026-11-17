@@ -13,18 +13,18 @@ import { useTranslation } from 'react-i18next';
 import { ScrollRestore } from 'react-scroll-restore';
 import { useLocation } from 'wouter';
 
-import { MarkdownCodeBlock } from './components/markdown-code-block';
-import { MarkdownHtml } from './components/markdown-html';
-import { MarkdownLink } from './components/markdown-link';
-import { MenuItems } from './components/menu-items';
-import { PageNavigation } from './components/page-navigation';
-import { SearchModal } from './components/search-modal';
-import { SiteNavbar } from './components/site-navbar';
-import { formatDocumentTitle } from './document-title';
-import { formatPackageVersion } from './package-version';
-import { getProjectLinks } from './project-links';
-import { createPageSearch } from './search';
-import type { MarkdownComponents, VitedThemeProps } from './types';
+import { formatDocumentTitle } from '../document-title';
+import { formatPackageVersion } from '../package-version';
+import { getProjectLinks } from '../project-links';
+import { createPageSearch } from '../search';
+import type { MarkdownComponents, VitedThemeProps } from '../types';
+import { MarkdownCodeBlock } from './markdown-code-block';
+import { MarkdownHtml } from './markdown-html';
+import { MarkdownLink } from './markdown-link';
+import { MenuItems } from './menu-items';
+import { PageNavigation } from './page-navigation';
+import { SearchModal } from './search-modal';
+import { SiteNavbar } from './site-navbar';
 
 const emptyLocales: string[] = [];
 

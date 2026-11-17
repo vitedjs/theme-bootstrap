@@ -10,6 +10,7 @@ import {
   type TocHeading,
 } from 'react-bootstrap-pro';
 import { useTranslation } from 'react-i18next';
+import { ScrollRestore } from 'react-scroll-restore';
 import { useLocation } from 'wouter';
 
 import { MarkdownCodeBlock } from './components/markdown-code-block';
@@ -156,6 +157,7 @@ export function ThemeApp({
           </aside>
         ) : undefined}
         <main className='flex-grow-1 vited-bs-main'>
+          <ScrollRestore key={pathname} />
           <div className='vited-bs-content-layout'>
             <Prose className='vited-bs-container py-3' key={pathname} ref={attachContent}>
               {Content ? (
